@@ -1,26 +1,129 @@
 {
-  "name": "twilit",
-  "displayName": "Twilit",
+  "name": "soluna",
+  "displayName": "Soluna",
+  "publisher": "ahmedalbarghouti",
   "author": {
     "name": "Ahmed Albarghouti",
-    "email": "ahmed@ahmedalbarghouti.com"},
-  "description": "gain the power to automatically or manually toggle between your chosen day and night themes with a mere click, ensuring your development environment is always in harmony with your surroundings and your circadian rhythms.",
-  "version": "0.0.1",
+    "email": "ahmed@ahmedalbarghouti.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AhmedAlbarghouti/Soluna"
+  },
+  "icon": "icon-256.png",
+  "description": "Enhance your Visual Studio Code environment by automatically or manually toggling between your chosen day and night themes. It's designed to keep your workspace in harmony with your circadian rhythms and external lighting conditions.",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.88.0"
   },
   "categories": [
+    "Themes",
     "Other"
   ],
-  "activationEvents": [],
+  "bugs": {
+    "url": "https://github.com/AhmedAlbarghouti/Soluna/issues",
+    "email": "ahmed@ahmedalbarghouti.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "theme automater",
+    "theme switcher",
+    "theme toggler",
+    "theme changer",
+    "theme switch"
+  ],
+  "homepage": "https://github.com/AhmedAlbarghouti/Soluna/blob/main/README.md",
+  "activationEvents": [
+    "*"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "twilit.helloWorld",
-        "title": "Hello World"
+        "command": "soluna.switchToLightTheme",
+        "title": "Switch To Light Theme",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.switchToDarkTheme",
+        "title": "Switch To Dark Theme",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.setPreferredLightTheme",
+        "title": "Set Preferred Light Theme",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.setPreferredDarkTheme",
+        "title": "Set Preferred Dark Theme",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.enableAutomaticSwitching",
+        "title": "Enable Automatic Switching",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.disableAutomaticSwitching",
+        "title": "Disable Automatic Switching",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.setSwitchToLightThemeTime",
+        "title": "Set Switch To Light Theme Time",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.setSwitchToDarkThemeTime",
+        "title": "Set Switch To Dark Theme Time",
+        "category": "🌗 Soluna"
+      },
+      {
+        "command": "soluna.showCommandsMenu",
+        "title": "Show Commands Menu",
+        "category": "🌗 Soluna"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "soluna.showCommandsMenu",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Soluna Settings",
+      "properties": {
+        "soluna.preferredLightTheme": {
+          "type": "string",
+          "default": "Default Light+",
+          "description": "Preferred light theme ID."
+        },
+        "soluna.preferredDarkTheme": {
+          "type": "string",
+          "default": "Default Dark+",
+          "description": "Preferred dark theme ID."
+        },
+        "soluna.automaticSwitching": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable automatic theme switching based on specified times."
+        },
+        "soluna.switchToLightThemeTime": {
+          "type": "string",
+          "default": "08:00",
+          "description": "Time to switch to the light theme (24-hour format)."
+        },
+        "soluna.switchToDarkThemeTime": {
+          "type": "string",
+          "default": "20:00",
+          "description": "Time to switch to the dark theme (24-hour format)."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -31,14 +134,15 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.88.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.88.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.8",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   }
 }

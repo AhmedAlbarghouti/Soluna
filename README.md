@@ -1,71 +1,79 @@
-# twilit README
+# Soluna
 
-This is the README for your extension "twilit". After writing up a brief description, we recommend including the following sections.
+Soluna enhances your Visual Studio Code environment by automatically or manually toggling between your chosen day and night themes. It's designed to keep your workspace in harmony with your circadian rhythms and external lighting conditions.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Soluna offers the following features to improve your VS Code experience:
 
-For example if there is an image subfolder under your extension project workspace:
+- **Automatic Theme Switching**: Soluna can automatically switch between light and dark themes based on specified times. This is ideal for users who prefer different themes during different parts of the day or night.
+- **Manual Theme Control**: Quickly toggle between your predefined light and dark themes with a simple click from the status bar.
 
-\!\[feature X\]\(images/feature-x.png\)
+![Soluna in action](./src/assets/soluna-demo.gif)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Commands
 
-## Requirements
+Soluna includes several commands to customize and control theme settings:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- `soluna.switchToLightTheme`: Switches to your predefined light theme.
+- `soluna.switchToDarkTheme`: Switches to your predefined dark theme.
+- `soluna.setPreferredLightTheme`: Allows you to select and set your preferred light theme from installed themes.
+- `soluna.setPreferredDarkTheme`: Allows you to select and set your preferred dark theme from installed themes.
+- `soluna.enableAutomaticSwitching`: Enables automatic switching between themes based on the times you set.
+- `soluna.disableAutomaticSwitching`: Disables automatic theme switching.
+- `soluna.setSwitchToLightThemeTime`: Sets the time for automatically switching to the light theme.
+- `soluna.setSwitchToDarkThemeTime`: Sets the time for automatically switching to the dark theme.
+- `soluna.showCommandsMenu`: Displays a menu with all Soluna commands for easy access.
 
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 1.0.0 | 2024-04-12
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release of Soluna
 
 ---
 
-## Following extension guidelines
+## Installation
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+You can install Soluna from the Visual Studio Code Marketplace:
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+1. Open VS Code.
+2. Navigate to the Extensions view by clicking on the square icon on the sidebar or pressing `Ctrl+Shift+X`.
+3. Search for "Soluna".
+4. Click on the Install button.
 
-## Working with Markdown
+## Usage
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+To use Soluna, you can access its commands through the Command Palette or by clicking the Soluna icon in the status bar:
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+1. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
+2. Type `Soluna` to see all available commands.
+3. Select a command to execute.
 
-## For more information
+Or you can use the `Soluna` button avaiable below on the status bar which would display all the available commands.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+For automatic theme switching, make sure to enable automatic switching via `enableAutomaticSwitching` command and configure your preferred themes and set the appropriate times for switching.
+
+### The Default values:
+
+- Light Theme: `Default Light+`
+- Dark Theme: `Default Dark+`
+- Automatic Switching: `false`
+- Light Theme Time: `08:00`
+- Dark Theme Time: `20:00`
+
+## Contributing
+
+Contributions are always welcome! Please read the contributing guidelines in `CONTRIBUTING.md` to get started.
+
+## License
+
+This project is licensed under the MIT License - see the `LICENSE.md` file for details.
+
+## Support
+
+If you encounter any issues or have suggestions for improvements, please file an issue on the GitHub repository.
 
 **Enjoy!**
