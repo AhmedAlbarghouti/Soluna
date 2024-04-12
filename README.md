@@ -6,8 +6,8 @@ Soluna enhances your Visual Studio Code environment by automatically or manually
 
 Soluna offers the following features to improve your VS Code experience:
 
-- **Automatic Theme Switching**: Soluna can automatically switch between light and dark themes based on specified times. This is ideal for users who prefer different themes during different parts of the day or night.
-- **Manual Theme Control**: Quickly toggle between your predefined light and dark themes with a simple click from the status bar.
+- **Automatic Theme Switching**: Soluna can automatically switch between day and night themes based on specified times. This is ideal for users who prefer different themes during different parts of the day or night.
+- **Manual Theme Control**: Quickly toggle between your predefined day and night themes with a simple click from the status bar.
 
 ![Soluna in action](./src/assets/soluna-demo.gif)
 
@@ -15,14 +15,14 @@ Soluna offers the following features to improve your VS Code experience:
 
 Soluna includes several commands to customize and control theme settings:
 
-- `soluna.switchToLightTheme`: Switches to your predefined light theme.
-- `soluna.switchToDarkTheme`: Switches to your predefined dark theme.
-- `soluna.setPreferredLightTheme`: Allows you to select and set your preferred light theme from installed themes.
-- `soluna.setPreferredDarkTheme`: Allows you to select and set your preferred dark theme from installed themes.
+- `soluna.switchToLightTheme`: Switches to your predefined day theme.
+- `soluna.switchToDarkTheme`: Switches to your predefined night theme.
+- `soluna.setPreferredLightTheme`: Allows you to select and set your preferred day theme from installed themes.
+- `soluna.setPreferredDarkTheme`: Allows you to select and set your preferred night theme from installed themes.
 - `soluna.enableAutomaticSwitching`: Enables automatic switching between themes based on the times you set.
 - `soluna.disableAutomaticSwitching`: Disables automatic theme switching.
-- `soluna.setSwitchToLightThemeTime`: Sets the time for automatically switching to the light theme.
-- `soluna.setSwitchToDarkThemeTime`: Sets the time for automatically switching to the dark theme.
+- `soluna.setSwitchToLightThemeTime`: Sets the time for automatically switching to the day theme.
+- `soluna.setSwitchToDarkThemeTime`: Sets the time for automatically switching to the night theme.
 - `soluna.showCommandsMenu`: Displays a menu with all Soluna commands for easy access.
 
 ## Release Notes
@@ -55,14 +55,15 @@ To use Soluna, you can access its commands through the Command Palette or by cli
 Or you can use the `Soluna` button avaiable below on the status bar which would display all the available commands.
 
 For automatic theme switching, make sure to enable automatic switching via `enableAutomaticSwitching` command and configure your preferred themes and set the appropriate times for switching.
+Day & Night Switching works by dividing the full 24 hours into two periods, each based on the times you set for both day and night.
 
 ### The Default values:
 
-- Light Theme: `Default Light+`
-- Dark Theme: `Default Dark+`
+- Day Theme: `Default Light+`
+- Night Theme: `Default Dark+`
 - Automatic Switching: `false`
-- Light Theme Time: `08:00`
-- Dark Theme Time: `20:00`
+- Day Theme Time: `08:00`
+- Night Theme Time: `20:00`
 
 ## Contributing
 

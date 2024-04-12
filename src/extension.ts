@@ -63,14 +63,20 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(setSwitchToDarkThemeTimeDisposable);
 
   const commands = [
-    { label: "Switch To Light Theme", command: "soluna.switchToLightTheme" },
-    { label: "Switch To Dark Theme", command: "soluna.switchToDarkTheme" },
-    { label: "Set Preferred Light Theme", command: "soluna.setPreferredLightTheme" },
-    { label: "Set Preferred Dark Theme", command: "soluna.setPreferredDarkTheme" },
-    { label: "Enable Automatic Switching", command: "soluna.enableAutomaticSwitching" },
-    { label: "Disable Automatic Switching", command: "soluna.disableAutomaticSwitching" },
-    { label: "Set Switch To Light Theme Time", command: "soluna.setSwitchToLightThemeTime" },
-    { label: "Set Switch To Dark Theme Time", command: "soluna.setSwitchToDarkThemeTime" },
+    { label: "Switch To Day Theme", command: "soluna.switchToLightTheme" },
+    { label: "Switch To Night Theme", command: "soluna.switchToDarkTheme" },
+    { label: "Set Preferred Day Theme", command: "soluna.setPreferredLightTheme" },
+    { label: "Set Preferred Night Theme", command: "soluna.setPreferredDarkTheme" },
+    {
+      label: "Enable Automatic Day/Night Theme Switching",
+      command: "soluna.enableAutomaticSwitching",
+    },
+    {
+      label: "Disable Automatic Day/Night Theme Switching",
+      command: "soluna.disableAutomaticSwitching",
+    },
+    { label: "Set Day Theme Time (Auto-Switching)", command: "soluna.setSwitchToLightThemeTime" },
+    { label: "Set Night Theme Time (Auto-Switching)", command: "soluna.setSwitchToDarkThemeTime" },
   ];
 
   // Status Bar Item Setup

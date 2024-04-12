@@ -41,42 +41,42 @@
     "commands": [
       {
         "command": "soluna.switchToLightTheme",
-        "title": "Switch To Light Theme",
+        "title": "Switch To Day Theme",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.switchToDarkTheme",
-        "title": "Switch To Dark Theme",
+        "title": "Switch To Night Theme",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.setPreferredLightTheme",
-        "title": "Set Preferred Light Theme",
+        "title": "Set Preferred Day Theme",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.setPreferredDarkTheme",
-        "title": "Set Preferred Dark Theme",
+        "title": "Set Preferred Night Theme",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.enableAutomaticSwitching",
-        "title": "Enable Automatic Switching",
+        "title": "Enable Automatic Day/Night Theme Switching",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.disableAutomaticSwitching",
-        "title": "Disable Automatic Switching",
+        "title": "Disable Automatic Day/Night Theme Switching",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.setSwitchToLightThemeTime",
-        "title": "Set Switch To Light Theme Time",
+        "title": "Set Day Theme Time (Auto-Switching)",
         "category": "🌗 Soluna"
       },
       {
         "command": "soluna.setSwitchToDarkThemeTime",
-        "title": "Set Switch To Dark Theme Time",
+        "title": "Set Night Theme Time (Auto-Switching)",
         "category": "🌗 Soluna"
       },
       {
