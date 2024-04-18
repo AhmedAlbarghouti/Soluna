@@ -66,6 +66,10 @@ export function switchToLightTheme() {
     if (preferredLightTheme === config.get("workbench.colorTheme")) {
       return;
     }
+    const automaticSwitching = config.get("soluna.automaticSwitching") as boolean;
+    if (automaticSwitching) {
+      disableAutomaticSwitching();
+    }
     config.update("workbench.colorTheme", preferredLightTheme, ConfigurationTarget.Global);
     window.showInformationMessage(
       `Theme switched to set day theme: ${preferredLightTheme} - Soluna`
@@ -82,6 +86,10 @@ export function switchToDarkTheme() {
     const preferredDarkTheme = config.get("soluna.preferredDarkTheme") as string;
     if (preferredDarkTheme === config.get("workbench.colorTheme")) {
       return;
+    }
+    const automaticSwitching = config.get("soluna.automaticSwitching") as boolean;
+    if (automaticSwitching) {
+      disableAutomaticSwitching();
     }
     config.update("workbench.colorTheme", preferredDarkTheme, ConfigurationTarget.Global);
     window.showInformationMessage(
