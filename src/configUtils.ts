@@ -1,19 +1,37 @@
 import { ConfigurationTarget, WorkspaceConfiguration, extensions, window, workspace } from "vscode";
 import { isLightTimeBeforeDarkTime, verifyValidTimeFormat } from "./timeUtils";
+import { get } from "http";
 
 export function getConfig(nameSpace: string): WorkspaceConfiguration {
   return nameSpace ? workspace.getConfiguration(nameSpace) : workspace.getConfiguration();
 }
 
-export function setupDefaults() {
+export async function updateConfig(nameSpace: string, key: string, value: string | boolean) {
+  const config = getConfig(nameSpace);
+  await config.update(key, value, ConfigurationTarget.Global);
+}
+
+export function getConfigValue(nameSpace: string, key: string) {
+  const config = getConfig(nameSpace);
+  return config.get(key);
+}
+
+export async function setupDefaults() {
   try {
     const config = getConfig("soluna");
     const hasUserSetPreferences =
-      config.has("preferredLightTheme") && config.has("preferredDarkTheme");
+      config.has("preferredLightTheme") &&
+      config.has("preferredDarkTheme") &&
+      config.has("automaticSwitching") &&
+      config.has("switchToLightThemeTime") &&
+      config.has("switchToDarkThemeTime");
 
     if (!hasUserSetPreferences) {
-      config.update("preferredLightTheme", "Default Light+", ConfigurationTarget.Global);
-      config.update("preferredDarkTheme", "Default Dark+", ConfigurationTarget.Global);
+      await updateConfig("soluna", "preferredLightTheme", "Default Light+");
+      await updateConfig("soluna", "preferredDarkTheme", "Default Dark+");
+      await updateConfig("soluna", "automaticSwitching", false);
+      await updateConfig("soluna", "switchToLightThemeTime", "08:00");
+      await updateConfig("soluna", "switchToDarkThemeTime", "18:00");
     }
   } catch (error) {
     console.error("Error setting up defaults", error);
@@ -23,16 +41,15 @@ export function setupDefaults() {
 
 export async function enableAutomaticSwitching() {
   try {
-    const config = getConfig("soluna");
-    const isAutomaticSwitchingEnabled = (await config.get("automaticSwitching")) as boolean;
-    if (isAutomaticSwitchingEnabled) {
+    const isAutomaticSwitchingEnabled = getConfigValue("soluna", "automaticSwitching") as boolean;
+    if (!isAutomaticSwitchingEnabled) {
+      await updateConfig("soluna", "automaticSwitching", true);
+      checkAndSwitchTheme();
+      window.showInformationMessage("Automatic day/night theme switching is enabled - Soluna");
+    } else {
       window.showInformationMessage(
         "Automatic day/night theme switching is already enabled - Soluna"
       );
-    } else {
-      await config.update("automaticSwitching", true, ConfigurationTarget.Global);
-      checkAndSwitchTheme();
-      window.showInformationMessage("Automatic day/night theme switching is enabled - Soluna");
     }
   } catch (error) {
     console.error("Failed to enable automatic theme switching", error);
@@ -42,15 +59,14 @@ export async function enableAutomaticSwitching() {
 
 export async function disableAutomaticSwitching() {
   try {
-    const config = getConfig("soluna");
-    const isAutomaticSwitchingEnabled = (await config.get("automaticSwitching")) as boolean;
-    if (!isAutomaticSwitchingEnabled) {
+    const isAutomaticSwitchingEnabled = getConfigValue("soluna", "automaticSwitching") as boolean;
+    if (isAutomaticSwitchingEnabled) {
+      await updateConfig("soluna", "automaticSwitching", false);
+      window.showInformationMessage("Automatic day/night theme switching is disabled - Soluna");
+    } else {
       window.showInformationMessage(
         "Automatic day/night theme switching is already disabled - Soluna"
       );
-    } else {
-      await config.update("automaticSwitching", false, ConfigurationTarget.Global);
-      window.showInformationMessage("Automatic day/night theme switching is disabled - Soluna");
     }
   } catch (error) {
     console.error("Failed to disable automatic theme switching", error);
@@ -58,23 +74,21 @@ export async function disableAutomaticSwitching() {
   }
 }
 
-export async function disableAutomaticSwitchingOnManualThemeChange() {
-  const config = getConfig("soluna");
-  const automaticSwitching = config.get("automaticSwitching") as boolean;
+export function disableAutomaticSwitchingOnManualThemeChange() {
+  const automaticSwitching = getConfigValue("soluna", "automaticSwitching") as boolean;
   if (automaticSwitching) {
     disableAutomaticSwitching();
   }
 }
 
-export function switchToLightTheme() {
+export async function switchToLightTheme() {
   try {
-    const config = getConfig("");
-    const preferredLightTheme = config.get("soluna.preferredLightTheme") as string;
-    if (preferredLightTheme === config.get("workbench.colorTheme")) {
+    const preferredLightTheme = getConfigValue("soluna", "preferredLightTheme") as string;
+    const currentTheme = getConfigValue("", "workbench.colorTheme") as string;
+    if (preferredLightTheme === currentTheme) {
       return;
     }
-
-    config.update("workbench.colorTheme", preferredLightTheme, ConfigurationTarget.Global);
+    await updateConfig("", "workbench.colorTheme", preferredLightTheme);
     window.showInformationMessage(
       `Theme switched to set day theme: ${preferredLightTheme} - Soluna`
     );
@@ -84,15 +98,14 @@ export function switchToLightTheme() {
   }
 }
 
-export function switchToDarkTheme() {
+export async function switchToDarkTheme() {
   try {
-    const config = getConfig("");
-    const preferredDarkTheme = config.get("soluna.preferredDarkTheme") as string;
-    if (preferredDarkTheme === config.get("workbench.colorTheme")) {
+    const preferredDarkTheme = getConfigValue("soluna", "preferredDarkTheme") as string;
+    const currentTheme = getConfigValue("", "workbench.colorTheme") as string;
+    if (preferredDarkTheme === currentTheme) {
       return;
     }
-
-    config.update("workbench.colorTheme", preferredDarkTheme, ConfigurationTarget.Global);
+    await updateConfig("", "workbench.colorTheme", preferredDarkTheme);
     window.showInformationMessage(
       `Theme switched to set night theme: ${preferredDarkTheme} - Soluna`
     );
@@ -104,7 +117,6 @@ export function switchToDarkTheme() {
 
 export async function setSwitchToLightThemeTime() {
   try {
-    const config = getConfig("soluna");
     const selectedTime = await window.showInputBox({
       placeHolder:
         "Set the time for the theme to automatically switch to day mode (HH:MM), for example, 08:00.",
@@ -113,15 +125,15 @@ export async function setSwitchToLightThemeTime() {
       window.showInformationMessage(`No time selected - Soluna`);
       return;
     }
-    const darkThemeTime = config.get("switchToDarkThemeTime") as string;
-    if (!isLightTimeBeforeDarkTime(selectedTime, darkThemeTime)) {
-      window.showErrorMessage("Day theme set time must be before night theme time - Soluna");
-      return;
-    } else {
-      config.update("switchToLightThemeTime", selectedTime, ConfigurationTarget.Global);
+    const darkThemeTime = getConfigValue("soluna", "switchToDarkThemeTime") as string;
+    if (isLightTimeBeforeDarkTime(selectedTime, darkThemeTime)) {
+      await updateConfig("soluna", "switchToLightThemeTime", selectedTime);
       window.showInformationMessage(
         `Day theme auto switch time is set to ${selectedTime} - Soluna`
       );
+    } else {
+      window.showErrorMessage("Day theme set time must be before night theme time - Soluna");
+      return;
     }
   } catch (error) {
     console.error("Failed to set day theme time", error);
@@ -140,15 +152,15 @@ export async function setSwitchToDarkThemeTime() {
       window.showInformationMessage(`No time selected - Soluna`);
       return;
     }
-    const lightThemeTime = config.get("switchToLightThemeTime") as string;
-    if (!isLightTimeBeforeDarkTime(lightThemeTime, selectedTime)) {
-      window.showErrorMessage("Night theme set time must be after day theme time - Soluna");
-      return;
-    } else {
-      config.update("switchToDarkThemeTime", selectedTime, ConfigurationTarget.Global);
+    const lightThemeTime = getConfigValue("soluna", "switchToLightThemeTime") as string;
+    if (isLightTimeBeforeDarkTime(lightThemeTime, selectedTime)) {
+      await updateConfig("soluna", "switchToDarkThemeTime", selectedTime);
       window.showInformationMessage(
         `Night theme auto switch time is set to ${selectedTime} - Soluna`
       );
+    } else {
+      window.showErrorMessage("Night theme set time must be after day theme time - Soluna");
+      return;
     }
   } catch (error) {
     console.error("Failed to set night theme time", error);
@@ -174,17 +186,13 @@ export async function setPreferredTheme(isLightTheme: boolean) {
     );
 
     if (selectedTheme) {
-      const config = getConfig("soluna");
-      const workspaceConfig = getConfig("");
       const themeConfigKey = isLightTheme ? "preferredLightTheme" : "preferredDarkTheme";
-      const oldTheme = config.get(themeConfigKey) as string;
-      config.update(themeConfigKey, selectedTheme, ConfigurationTarget.Global);
-      const currentTheme = workspaceConfig.get("workbench.colorTheme") as string;
-      const automaticSwitching = config.get("automaticSwitching") as boolean;
-      if (currentTheme === oldTheme && !automaticSwitching) {
-        workspaceConfig.update("workbench.colorTheme", selectedTheme, ConfigurationTarget.Global);
-      } else {
-        checkAndSwitchTheme();
+      const oldTheme = getConfigValue("soluna", themeConfigKey) as string;
+      const currentTheme = getConfigValue("", "workbench.colorTheme") as string;
+
+      await updateConfig("soluna", themeConfigKey, selectedTheme);
+      if (currentTheme === oldTheme) {
+        updateConfig("", "workbench.colorTheme", selectedTheme);
       }
       window.showInformationMessage(
         `Preferred ${isLightTheme ? "day" : "night"} theme set to ${selectedTheme} - Soluna`
@@ -202,9 +210,7 @@ export async function setPreferredTheme(isLightTheme: boolean) {
 
 export function checkAndSwitchTheme() {
   try {
-    const config = getConfig("soluna");
-    const automaticSwitching = config.get("automaticSwitching") as boolean;
-
+    const automaticSwitching = getConfigValue("soluna", "automaticSwitching") as boolean;
     if (!automaticSwitching) {
       return;
     }
@@ -212,8 +218,8 @@ export function checkAndSwitchTheme() {
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
 
-    const lightThemeTime = config.get("switchToLightThemeTime") as string;
-    const darkThemeTime = config.get("switchToDarkThemeTime") as string;
+    const lightThemeTime = getConfigValue("soluna", "switchToLightThemeTime") as string;
+    const darkThemeTime = getConfigValue("soluna", "switchToDarkThemeTime") as string;
 
     // Convert times to minutes for easier comparison
     const [lightHours, lightMinutes] = lightThemeTime.split(":").map(Number);
@@ -222,21 +228,33 @@ export function checkAndSwitchTheme() {
     const darkThemeTimeInMinutes = darkHours * 60 + darkMinutes;
     const currentTimeInMinutes = currentHour * 60 + currentMinutes;
 
-    // Handle edge cases, such as the dark theme time being after midnight
-    const isAfterMidnight = darkThemeTimeInMinutes < lightThemeTimeInMinutes;
-    const isInLightPeriod = isAfterMidnight
-      ? currentTimeInMinutes < darkThemeTimeInMinutes ||
-        currentTimeInMinutes >= lightThemeTimeInMinutes
-      : currentTimeInMinutes >= lightThemeTimeInMinutes &&
-        currentTimeInMinutes < darkThemeTimeInMinutes;
-
-    if (isInLightPeriod) {
-      switchToLightTheme();
-    } else {
-      switchToDarkTheme();
-    }
+    determineThemeBasedOnTime(
+      lightThemeTimeInMinutes,
+      darkThemeTimeInMinutes,
+      currentTimeInMinutes
+    );
   } catch (error) {
     console.error("Error automatically switching day/night themes in Soluna: ", error);
     window.showErrorMessage("Soluna encountered an error trying to auto switch themes.");
+  }
+}
+
+export async function determineThemeBasedOnTime(
+  lightThemeTimeInMinutes: number,
+  darkThemeTimeInMinutes: number,
+  currentTimeInMinutes: number
+) {
+  // Handle edge cases, such as the dark theme time being after midnight
+  const isAfterMidnight = darkThemeTimeInMinutes < lightThemeTimeInMinutes;
+  const isInLightPeriod = isAfterMidnight
+    ? currentTimeInMinutes < darkThemeTimeInMinutes ||
+      currentTimeInMinutes >= lightThemeTimeInMinutes
+    : currentTimeInMinutes >= lightThemeTimeInMinutes &&
+      currentTimeInMinutes < darkThemeTimeInMinutes;
+
+  if (isInLightPeriod) {
+    await switchToLightTheme();
+  } else {
+    await switchToDarkTheme();
   }
 }
