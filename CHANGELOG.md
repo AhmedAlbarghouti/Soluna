@@ -28,3 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the labels from using light & dark to day & night for better clarification.
+
+## [1.0.3] - 2024-04-19
+
+### Fixed
+
+- Added more tests and improved the flow of the application.

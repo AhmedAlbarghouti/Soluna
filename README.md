@@ -25,14 +25,6 @@ Soluna includes several commands to customize and control theme settings:
 - `soluna.setSwitchToDarkThemeTime`: Sets the time for automatically switching to the night theme.
 - `soluna.showCommandsMenu`: Displays a menu with all Soluna commands for easy access.
 
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0 | 2024-04-12
-
-Initial release of Soluna
-
 ---
 
 ## Installation
