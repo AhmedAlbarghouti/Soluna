@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import {
   checkAndSwitchTheme,
   disableAutomaticSwitching,
+  disableAutomaticSwitchingOnManualThemeChange,
   enableAutomaticSwitching,
   setPreferredTheme,
   setSwitchToDarkThemeTime,
@@ -16,12 +17,18 @@ export function activate(context: vscode.ExtensionContext) {
 
   let switchToLightThemeDisposable = vscode.commands.registerCommand(
     "soluna.switchToLightTheme",
-    () => switchToLightTheme()
+    () => {
+      switchToLightTheme();
+      disableAutomaticSwitchingOnManualThemeChange();
+    }
   );
 
   let switchToDarkThemeDisposable = vscode.commands.registerCommand(
     "soluna.switchToDarkTheme",
-    () => switchToDarkTheme()
+    () => {
+      switchToDarkTheme();
+      disableAutomaticSwitchingOnManualThemeChange();
+    }
   );
 
   let enableAutomaticSwitchingDisposable = vscode.commands.registerCommand(

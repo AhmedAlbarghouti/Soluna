@@ -21,16 +21,16 @@ export function setupDefaults() {
   }
 }
 
-export function enableAutomaticSwitching() {
+export async function enableAutomaticSwitching() {
   try {
     const config = getConfig("soluna");
-    const isAutomaticSwitchingEnabled = config.get("automaticSwitching") as boolean;
+    const isAutomaticSwitchingEnabled = (await config.get("automaticSwitching")) as boolean;
     if (isAutomaticSwitchingEnabled) {
       window.showInformationMessage(
         "Automatic day/night theme switching is already enabled - Soluna"
       );
     } else {
-      config.update("automaticSwitching", true, ConfigurationTarget.Global);
+      await config.update("automaticSwitching", true, ConfigurationTarget.Global);
       checkAndSwitchTheme();
       window.showInformationMessage("Automatic day/night theme switching is enabled - Soluna");
     }
@@ -40,22 +40,29 @@ export function enableAutomaticSwitching() {
   }
 }
 
-export function disableAutomaticSwitching() {
+export async function disableAutomaticSwitching() {
   try {
     const config = getConfig("soluna");
-    const isAutomaticSwitchingEnabled = config.get("automaticSwitching") as boolean;
+    const isAutomaticSwitchingEnabled = (await config.get("automaticSwitching")) as boolean;
     if (!isAutomaticSwitchingEnabled) {
       window.showInformationMessage(
         "Automatic day/night theme switching is already disabled - Soluna"
       );
     } else {
-      config.update("automaticSwitching", false, ConfigurationTarget.Global);
-      checkAndSwitchTheme();
+      await config.update("automaticSwitching", false, ConfigurationTarget.Global);
       window.showInformationMessage("Automatic day/night theme switching is disabled - Soluna");
     }
   } catch (error) {
     console.error("Failed to disable automatic theme switching", error);
     window.showErrorMessage("Failed to disable automatic theme switching - Soluna");
+  }
+}
+
+export async function disableAutomaticSwitchingOnManualThemeChange() {
+  const config = getConfig("soluna");
+  const automaticSwitching = config.get("automaticSwitching") as boolean;
+  if (automaticSwitching) {
+    disableAutomaticSwitching();
   }
 }
 
@@ -66,10 +73,7 @@ export function switchToLightTheme() {
     if (preferredLightTheme === config.get("workbench.colorTheme")) {
       return;
     }
-    const automaticSwitching = config.get("soluna.automaticSwitching") as boolean;
-    if (automaticSwitching) {
-      disableAutomaticSwitching();
-    }
+
     config.update("workbench.colorTheme", preferredLightTheme, ConfigurationTarget.Global);
     window.showInformationMessage(
       `Theme switched to set day theme: ${preferredLightTheme} - Soluna`
@@ -87,10 +91,7 @@ export function switchToDarkTheme() {
     if (preferredDarkTheme === config.get("workbench.colorTheme")) {
       return;
     }
-    const automaticSwitching = config.get("soluna.automaticSwitching") as boolean;
-    if (automaticSwitching) {
-      disableAutomaticSwitching();
-    }
+
     config.update("workbench.colorTheme", preferredDarkTheme, ConfigurationTarget.Global);
     window.showInformationMessage(
       `Theme switched to set night theme: ${preferredDarkTheme} - Soluna`
@@ -174,17 +175,20 @@ export async function setPreferredTheme(isLightTheme: boolean) {
 
     if (selectedTheme) {
       const config = getConfig("soluna");
+      const workspaceConfig = getConfig("");
       const themeConfigKey = isLightTheme ? "preferredLightTheme" : "preferredDarkTheme";
+      const oldTheme = config.get(themeConfigKey) as string;
       config.update(themeConfigKey, selectedTheme, ConfigurationTarget.Global);
-
+      const currentTheme = workspaceConfig.get("workbench.colorTheme") as string;
+      const automaticSwitching = config.get("automaticSwitching") as boolean;
+      if (currentTheme === oldTheme && !automaticSwitching) {
+        workspaceConfig.update("workbench.colorTheme", selectedTheme, ConfigurationTarget.Global);
+      } else {
+        checkAndSwitchTheme();
+      }
       window.showInformationMessage(
         `Preferred ${isLightTheme ? "day" : "night"} theme set to ${selectedTheme} - Soluna`
       );
-      isLightTheme ? switchToLightTheme() : switchToDarkTheme();
-      // if automatic switching is enabled, check if it's time to switch themes
-      if (config.get("automaticSwitching") as boolean) {
-        checkAndSwitchTheme();
-      }
     } else {
       window.showInformationMessage(`No theme selected - Soluna`);
     }
