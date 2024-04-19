@@ -16,29 +16,6 @@ export function getConfigValue(nameSpace: string, key: string) {
   return config.get(key);
 }
 
-export async function setupDefaults() {
-  try {
-    const config = getConfig("soluna");
-    const hasUserSetPreferences =
-      config.has("preferredLightTheme") &&
-      config.has("preferredDarkTheme") &&
-      config.has("automaticSwitching") &&
-      config.has("switchToLightThemeTime") &&
-      config.has("switchToDarkThemeTime");
-
-    if (!hasUserSetPreferences) {
-      await updateConfig("soluna", "preferredLightTheme", "Default Light+");
-      await updateConfig("soluna", "preferredDarkTheme", "Default Dark+");
-      await updateConfig("soluna", "automaticSwitching", false);
-      await updateConfig("soluna", "switchToLightThemeTime", "08:00");
-      await updateConfig("soluna", "switchToDarkThemeTime", "18:00");
-    }
-  } catch (error) {
-    console.error("Error setting up defaults", error);
-    window.showErrorMessage("Error setting up defaults - Soluna");
-  }
-}
-
 export async function enableAutomaticSwitching() {
   try {
     const isAutomaticSwitchingEnabled = getConfigValue("soluna", "automaticSwitching") as boolean;

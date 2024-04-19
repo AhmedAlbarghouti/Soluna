@@ -7,14 +7,11 @@ import {
   setPreferredTheme,
   setSwitchToDarkThemeTime,
   setSwitchToLightThemeTime,
-  setupDefaults,
   switchToDarkTheme,
   switchToLightTheme,
 } from "./configUtils";
 
-export function activate(context: vscode.ExtensionContext) {
-  setupDefaults();
-
+export async function activate(context: vscode.ExtensionContext) {
   let switchToLightThemeDisposable = vscode.commands.registerCommand(
     "soluna.switchToLightTheme",
     () => {

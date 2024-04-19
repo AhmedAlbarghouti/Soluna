@@ -4,16 +4,10 @@ import {
   getConfig,
   updateConfig,
   getConfigValue,
-  setupDefaults,
   enableAutomaticSwitching,
   disableAutomaticSwitching,
-  disableAutomaticSwitchingOnManualThemeChange,
   switchToLightTheme,
   switchToDarkTheme,
-  setSwitchToLightThemeTime,
-  setSwitchToDarkThemeTime,
-  setPreferredTheme,
-  checkAndSwitchTheme,
   determineThemeBasedOnTime,
 } from "../../configUtils";
 
@@ -24,7 +18,6 @@ suite("Soluna Utils Test Suite", () => {
   });
 
   test("setupDefaults should set default themes if not set", async () => {
-    await setupDefaults();
     const lightTheme = getConfigValue("soluna", "preferredLightTheme");
     const darkTheme = getConfigValue("soluna", "preferredDarkTheme");
     assert.strictEqual(lightTheme, "Default Light+");
