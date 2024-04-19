@@ -12,7 +12,7 @@
   },
   "icon": "icon-256.png",
   "description": "Enhance your Visual Studio Code environment by automatically or manually toggling between your chosen day and night themes. It's designed to keep your workspace in harmony with your circadian rhythms and external lighting conditions.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.50.0"
   },
